@@ -1,8 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-# More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
-
-name: Build and deploy Python app to Azure Web App - superfanlive
+name: Build and deploy Python + React app (Azure App Service)
 
 on:
   push:
@@ -16,67 +12,32 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Setup Python
+      - name: Set up Python 3.9
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
       - name: Install backend dependencies
         run: |
-          pip install -r backend/requirements.txt
-          pip install gunicorn
+          pip install --upgrade pip
+          pip install -r backend/requirements.txt gunicorn
 
-      - name: Setup Node
+      - name: Set up Node.js 18
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: Install & build frontend
+      - name: Build frontend
         working-directory: frontend
         run: |
           npm ci
           npm run build
 
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: superfanlive
-          slot-name: production
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: .
 
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: python-app
-
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
-
-      
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_FBBB56CA38544444B0AFE60E68A78CB6 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_E8D5FC816B614A8980ACB8252AB7BCAF }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_474CF466BDF342F8ACF879CE7B0D56F7 }}
-
-      - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v3
-        id: deploy-to-webapp
-        with:
-          app-name: 'superfanlive'
-          slot-name: 'Production'
-          
