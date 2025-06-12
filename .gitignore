@@ -1,0 +1,6 @@
+/.venv
+/.vscode
+__pycache__
+ChatHistoryBackup.txt
+config.py
+__pycache__/
