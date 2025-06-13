@@ -1,5 +1,0 @@
--r backend/requirements.txt
-fastapi
-uvicorn
-openai
-requests

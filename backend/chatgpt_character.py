@@ -4,7 +4,6 @@ from rich import print
 from azure_speech_to_text import SpeechToTextManager
 from openai_chat import OpenAiManager
 from eleven_labs import ElevenLabsManager
-from obs_websockets import OBSWebsocketsManager
 from audio_player import AudioManager
 
 # ==========================================
@@ -13,17 +12,11 @@ from audio_player import AudioManager
 ELEVENLABS_VOICE = "EfeZGaJNAkxPkAcQVffY"
 # ==========================================
 
-# ==========================================
-# 🎥 CONFIGURE YOUR OBS SCENE AND SOURCE HERE!
-OBS_SCENE_NAME = "*** SUPERFAN_IRL"    # Your actual OBS scene name
-OBS_SOURCE_NAME = "closed"             # The OBS source name you want to toggle
-# ==========================================
 
 BACKUP_FILE = "ChatHistoryBackup.txt"
 
 # 🔧 Initialize managers
 elevenlabs_manager = ElevenLabsManager()
-obswebsockets_manager = OBSWebsocketsManager()
 speechtotext_manager = SpeechToTextManager()
 openai_manager = OpenAiManager()
 audio_manager = AudioManager()
@@ -83,14 +76,9 @@ while True:
     # Convert to audio with ElevenLabs
     elevenlabs_output = elevenlabs_manager.text_to_audio(openai_result, ELEVENLABS_VOICE, False)
 
-    # Show OBS source
-    obswebsockets_manager.set_source_visibility(OBS_SCENE_NAME, OBS_SOURCE_NAME, True)
 
     # Play the audio file
     audio_manager.play_audio(elevenlabs_output, True, True, True)
 
-    # Hide OBS source after playback
-    obswebsockets_manager.set_source_visibility(OBS_SCENE_NAME, OBS_SOURCE_NAME, False)
 
     print("[green]\n!!!!!!!\nFINISHED PROCESSING DIALOGUE.\nREADY FOR NEXT INPUT\n!!!!!!!\n")
-p

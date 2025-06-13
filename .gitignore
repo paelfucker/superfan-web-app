@@ -1,6 +1,8 @@
 /.venv
 /.vscode
-__pycache__
+__pycache__/
 ChatHistoryBackup.txt
 config.py
-__pycache__/
+env/
+frontend/node_modules/
+frontend/build/

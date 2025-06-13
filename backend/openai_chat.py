@@ -1,7 +1,8 @@
-from backend.openai_chat import OpenAiManager
+from openai import OpenAI
 import tiktoken
 from rich import print
 from config import OPENAI_API_KEY
+
 
 
 def num_tokens_from_messages(messages, model='gpt-4o'):

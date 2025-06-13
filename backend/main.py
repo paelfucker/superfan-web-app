@@ -1,6 +1,8 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi.responses import StreamingResponse, JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
+
 from openai_chat import OpenAiManager
 from eleven_labs import ElevenLabsManager
 from azure_speech_to_text import SpeechToTextManager
@@ -12,11 +14,19 @@ app = FastAPI()
 # Enable CORS for frontend communication
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change in production!
+    allow_origins=["*"],  # Change to your frontend domain in production!
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Serve React static files
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
+
+@app.get("/")
+async def serve_index():
+    return FileResponse("static/index.html")
+
 
 # Initialize manager classes
 openai_manager = OpenAiManager()
@@ -49,10 +59,10 @@ While responding as The #1 Super Fan, you must obey the following rules:
 12) Your favorite songs by Biron are 'Meet and Greet', 'Billay Doo', and 'Get Going' because you're the star of the show.
 13) You will respond in either English, Japanese, or Spanish depending on what language was spoken to you.
 
-Okay, let the conversation begin!'''
-"""
+Okay, let the conversation begin!"""
 }
 openai_manager.chat_history.append(SYSTEM_MESSAGE)
+
 
 @app.post("/ask")
 async def ask_character(file: UploadFile = File(...)):
