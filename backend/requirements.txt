@@ -12,3 +12,6 @@ tiktoken==0.5.1
 fastapi
 uvicorn
 gunicorn
+flask
+openai
+
