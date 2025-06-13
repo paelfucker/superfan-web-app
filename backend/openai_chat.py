@@ -1,4 +1,4 @@
-from openai import OpenAI
+from backend.openai_chat import OpenAiManager
 import tiktoken
 from rich import print
 from config import OPENAI_API_KEY
