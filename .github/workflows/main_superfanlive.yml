@@ -17,10 +17,11 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install backend dependencies
+      - name: Install Python dependencies (root and backend)
         run: |
           pip install --upgrade pip
-          pip install -r backend/requirements.txt gunicorn
+          pip install -r requirements.txt
+          pip install -r backend/requirements.txt
 
       - name: Set up Node.js 18
         uses: actions/setup-node@v3
@@ -30,7 +31,7 @@ jobs:
       - name: Build frontend
         working-directory: frontend
         run: |
-          npm ci --prefer-offline
+          npm ci
           npm run build
 
       - name: Deploy to Azure Web App
@@ -39,5 +40,3 @@ jobs:
           app-name: superfanlive
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: .
-
-# Trigger redeploy - June 12
